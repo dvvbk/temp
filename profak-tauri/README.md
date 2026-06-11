@@ -13,6 +13,8 @@ profak-tauri/
 │   ├── faktura.rs        # wyliczenia: PrzeliczCeny, PrzeliczRazem (zgodne z oryginałem)
 │   ├── numerator.rs      # numeracja dokumentów: FV/[Numer]/[Rok], grupy liczników
 │   ├── liczby.rs         # zaokrąglanie kwot (MidpointRounding.AwayFromZero)
+│   ├── slownie.rs        # kwoty słownie po polsku (port SlowniePL)
+│   ├── wydruk.rs         # wydruk faktury do PDF (odpowiednik modułu QuestPDF)
 │   └── repo.rs           # CRUD + operacje: wystawianie, korekta, faktura podobna
 ├── src-tauri/            # powłoka Tauri - komendy IPC nad profak-core
 └── src/                  # frontend React: listy faktur, edytor, kontrahenci, słowniki
@@ -35,10 +37,14 @@ zmiennoprzecinkowych. Baza danych to plikowy SQLite w katalogu danych aplikacji.
 * Wpłaty i kwota pozostała do zapłaty
 * Kontrahenci, towary/usługi, stawki VAT, jednostki miar, waluty, sposoby płatności
 * Dane startowe identyczne z oryginałem (stawki VAT, numeratory, sposoby płatności…)
+* Wydruk faktury do PDF w układzie zgodnym z oryginałem: nagłówek
+  sprzedawca/nabywca, specyfikacja pozycji (dla korekt z podziałem
+  przed/po korekcie), podsumowanie według stawek VAT, kwota słownie,
+  dane płatności (czcionka DejaVu Sans z polskimi znakami, wbudowana w binarkę)
 
 ## Czego (jeszcze) nie ma
 
-Wydruki (QuestPDF), JPK/KSeF, integracje GUS i biała lista, deklaracje VAT,
+JPK/KSeF, integracje GUS i biała lista, deklaracje VAT,
 zaliczki PIT, składki ZUS, KPiR/EP, wysyłka e-mail, załączniki, API zewnętrzne.
 Rdzeń w `profak-core` jest tak podzielony, żeby te moduły dało się dokładać
 bez zmian w UI.

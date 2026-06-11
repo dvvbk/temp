@@ -7,6 +7,8 @@ pub mod liczby;
 pub mod model;
 pub mod numerator;
 pub mod repo;
+pub mod slownie;
+pub mod wydruk;
 
 pub use rusqlite;
 

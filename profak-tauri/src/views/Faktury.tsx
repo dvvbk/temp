@@ -10,6 +10,7 @@ export function Faktury({ czySprzedaz }: { czySprzedaz: boolean }) {
   const [edytowanaId, setEdytowanaId] = useState<number | null>(null);
   const [nowyRodzaj, setNowyRodzaj] = useState<RodzajFaktury | null>(null);
   const [blad, setBlad] = useState("");
+  const [komunikat, setKomunikat] = useState("");
 
   const odswiez = useCallback(() => {
     api
@@ -42,6 +43,15 @@ export function Faktury({ czySprzedaz }: { czySprzedaz: boolean }) {
     try {
       const kopiaId = await api.przygotujPodobna(id);
       setEdytowanaId(kopiaId);
+    } catch (e) {
+      setBlad(String(e));
+    }
+  };
+
+  const pdf = async (id: number) => {
+    try {
+      const sciezka = await api.wydrukujFakture(id);
+      setKomunikat(`Zapisano wydruk: ${sciezka}`);
     } catch (e) {
       setBlad(String(e));
     }
@@ -92,6 +102,7 @@ export function Faktury({ czySprzedaz }: { czySprzedaz: boolean }) {
         )}
       </header>
       {blad && <p className="blad">{blad}</p>}
+      {komunikat && <p className="komunikat">{komunikat}</p>}
       <table className="tabela">
         <thead>
           <tr>
@@ -125,6 +136,7 @@ export function Faktury({ czySprzedaz }: { czySprzedaz: boolean }) {
               <td>{w.waluta_skrot}</td>
               <td className="akcje">
                 <button onClick={() => setEdytowanaId(w.id)}>Edytuj</button>
+                <button onClick={() => pdf(w.id)}>PDF</button>
                 <button onClick={() => korekta(w.id)}>Korekta</button>
                 <button onClick={() => podobna(w.id)}>Podobna</button>
                 <button className="usun" onClick={() => usun(w)}>

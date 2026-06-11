@@ -331,6 +331,7 @@ export const api = {
   przygotujPodobna: (id: number) => invoke<number>("przygotuj_podobna", { id }),
   dodajWplate: (wplata: Wplata) => invoke<number>("dodaj_wplate", { wplata }),
   usunWplate: (id: number) => invoke<void>("usun_wplate", { id }),
+  wydrukujFakture: (id: number) => invoke<string>("wydrukuj_fakture", { id }),
 };
 
 export const kwota = (s: string): string => {

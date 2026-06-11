@@ -225,6 +225,18 @@ export function FakturaEdytor({ fakturaId, rodzaj, zamknij }: Props) {
         <h2>
           {faktura.rodzaj} {faktura.numer && <span className="numer-faktury">{faktura.numer}</span>}
         </h2>
+        {faktura.id !== 0 && (
+          <button
+            onClick={() =>
+              api.wydrukujFakture(faktura.id).then(
+                () => setBlad(""),
+                (e) => setBlad(String(e)),
+              )
+            }
+          >
+            PDF
+          </button>
+        )}
         <button onClick={() => zapisz(false)}>Zapisz roboczą</button>
         <button className="glowny" onClick={() => zapisz(true)}>
           {faktura.numer ? "Zapisz" : "Wystaw"}

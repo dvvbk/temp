@@ -202,6 +202,26 @@ fn usun_wplate(baza: State<Baza>, id: i64) -> Wynik<()> {
     mapuj(repo::usun_wplate(&baza.0.lock().unwrap(), id))
 }
 
+/// Generuje PDF faktury, zapisuje w katalogu danych aplikacji i otwiera
+/// w domyślnej przeglądarce PDF. Zwraca ścieżkę zapisanego pliku.
+#[tauri::command]
+fn wydrukuj_fakture(app: tauri::AppHandle, baza: State<Baza>, id: i64) -> Wynik<String> {
+    let wydruk = {
+        let conn = baza.0.lock().unwrap();
+        mapuj(profak_core::wydruk::wydrukuj_fakture(&conn, id))?
+    };
+    let katalog = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| e.to_string())?
+        .join("wydruki");
+    std::fs::create_dir_all(&katalog).map_err(|e| e.to_string())?;
+    let sciezka = katalog.join(&wydruk.nazwa_pliku);
+    std::fs::write(&sciezka, &wydruk.pdf).map_err(|e| e.to_string())?;
+    let _ = open::that(&sciezka);
+    Ok(sciezka.to_string_lossy().into_owned())
+}
+
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
@@ -243,7 +263,8 @@ pub fn run() {
             przygotuj_korekte,
             przygotuj_podobna,
             dodaj_wplate,
-            usun_wplate
+            usun_wplate,
+            wydrukuj_fakture
         ])
         .run(tauri::generate_context!())
         .expect("błąd uruchamiania aplikacji ProFak");

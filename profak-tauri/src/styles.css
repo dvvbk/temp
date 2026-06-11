@@ -209,6 +209,14 @@ textarea {
   font-weight: 600;
 }
 
+.komunikat {
+  background: #c6f6d5;
+  border: 1px solid #2f855a;
+  color: #22543d;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
 .blad {
   background: #fed7d7;
   border: 1px solid var(--czerwony);
